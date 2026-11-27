@@ -17,7 +17,7 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/Klikr"
 cp Support/Info.plist "$APP/Contents/Info.plist"
-cp -R layouts "$APP/Contents/Resources/layouts"
+cp -R "${LAYOUTS_DIR:-layouts}" "$APP/Contents/Resources/layouts"
 cp Support/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 cp Support/MenuIcon.png Support/MenuIcon@2x.png Support/MenuTemplate.png Support/MenuTemplate@2x.png "$APP/Contents/Resources/"
 
