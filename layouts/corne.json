@@ -1,0 +1,67 @@
+{
+  "name": "Corne 42",
+  "spacing": {"x": 19.05, "y": 19.05},
+  "layers": [
+    {"name": "Base", "short": "abc"},
+    {"name": "Number", "short": "123"}
+  ],
+  "groups": {
+    "left": {"key": "#e6e6e3", "keyTop": "#f6f6f4", "legend": "#222222", "case": "#c8c9cc", "plate": "#2a2a2a", "splitShift": 0},
+    "right": {"key": "#e6e6e3", "keyTop": "#f6f6f4", "legend": "#222222", "case": "#c8c9cc", "plate": "#2a2a2a", "splitShift": 1}
+  },
+  "keys": [
+    {"id": "L00", "group": "left", "x": 0.0, "y": 0.375, "actions": ["`", "esc"]},
+    {"id": "L10", "group": "left", "x": 1.0, "y": 0.375, "actions": ["q", "1"]},
+    {"id": "L20", "group": "left", "x": 2.0, "y": 0.125, "actions": ["w", "2"]},
+    {"id": "L30", "group": "left", "x": 3.0, "y": 0.0, "actions": ["e", "3"]},
+    {"id": "L40", "group": "left", "x": 4.0, "y": 0.125, "actions": ["r", "4"]},
+    {"id": "L50", "group": "left", "x": 5.0, "y": 0.25, "actions": ["t", "5"]},
+    {"id": "L01", "group": "left", "x": 0.0, "y": 1.375, "actions": ["lopt"]},
+    {"id": "L11", "group": "left", "x": 1.0, "y": 1.375, "actions": ["a"]},
+    {"id": "L21", "group": "left", "x": 2.0, "y": 1.125, "actions": ["s"]},
+    {"id": "L31", "group": "left", "x": 3.0, "y": 1.0, "actions": ["d"]},
+    {"id": "L41", "group": "left", "x": 4.0, "y": 1.125, "actions": ["f"], "homing": true},
+    {"id": "L51", "group": "left", "x": 5.0, "y": 1.25, "actions": ["g"]},
+    {"id": "L02", "group": "left", "x": 0.0, "y": 2.375, "actions": ["lcmd"]},
+    {"id": "L12", "group": "left", "x": 1.0, "y": 2.375, "actions": ["z"]},
+    {"id": "L22", "group": "left", "x": 2.0, "y": 2.125, "actions": ["x"]},
+    {"id": "L32", "group": "left", "x": 3.0, "y": 2.0, "actions": ["c"]},
+    {"id": "L42", "group": "left", "x": 4.0, "y": 2.125, "actions": ["v"]},
+    {"id": "L52", "group": "left", "x": 5.0, "y": 2.25, "actions": ["b"]},
+    {"id": "LT0", "group": "left", "x": 3.5, "y": 3.19, "actions": ["esc"]},
+    {"id": "LT1", "group": "left", "x": 4.61, "y": 3.32, "r": 15, "actions": ["space"], "labels": ["space"], "remap": true},
+    {"id": "LT2", "group": "left", "x": 5.77, "y": 3.25, "h": 1.5, "r": 30, "actions": ["lctrl"]},
+    {"id": "R00", "group": "right", "x": 14.5, "y": 0.375, "actions": ["\\", "del"]},
+    {"id": "R10", "group": "right", "x": 13.5, "y": 0.375, "actions": ["p", "0"]},
+    {"id": "R20", "group": "right", "x": 12.5, "y": 0.125, "actions": ["o", "9"]},
+    {"id": "R30", "group": "right", "x": 11.5, "y": 0.0, "actions": ["i", "8"]},
+    {"id": "R40", "group": "right", "x": 10.5, "y": 0.125, "actions": ["u", "7"]},
+    {"id": "R50", "group": "right", "x": 9.5, "y": 0.25, "actions": ["y", "6"]},
+    {"id": "R01", "group": "right", "x": 14.5, "y": 1.375, "actions": ["'", "="]},
+    {"id": "R11", "group": "right", "x": 13.5, "y": 1.375, "actions": [";", "-"]},
+    {"id": "R21", "group": "right", "x": 12.5, "y": 1.125, "actions": ["l", "right"]},
+    {"id": "R31", "group": "right", "x": 11.5, "y": 1.0, "actions": ["k", "down"]},
+    {"id": "R41", "group": "right", "x": 10.5, "y": 1.125, "actions": ["j", "left"], "homing": true},
+    {"id": "R51", "group": "right", "x": 9.5, "y": 1.25, "actions": ["h", "up"]},
+    {"id": "R02", "group": "right", "x": 14.5, "y": 2.375, "actions": ["rcmd"]},
+    {"id": "R12", "group": "right", "x": 13.5, "y": 2.375, "actions": ["/", "-"]},
+    {"id": "R22", "group": "right", "x": 12.5, "y": 2.125, "actions": [".", "}"]},
+    {"id": "R32", "group": "right", "x": 11.5, "y": 2.0, "actions": [",", "{"]},
+    {"id": "R42", "group": "right", "x": 10.5, "y": 2.125, "actions": ["m", "]"]},
+    {"id": "R52", "group": "right", "x": 9.5, "y": 2.25, "actions": ["n", "["]},
+    {"id": "RT0", "group": "right", "x": 11.0, "y": 3.19, "actions": ["mo(1)"], "labels": ["123"], "remap": true},
+    {"id": "RT1", "group": "right", "x": 9.89, "y": 3.32, "r": -15, "actions": ["bspc"], "labels": ["⌫"], "remap": true},
+    {"id": "RT2", "group": "right", "x": 8.73, "y": 3.25, "h": 1.5, "r": -30, "actions": ["enter"], "labels": ["↩"], "remap": true}
+  ],
+  "covers": [
+    {"group": "left", "x": 6.05, "y": 0.3, "w": 0.9, "h": 3.0, "color": "#1b1d22", "r": 0.05},
+    {"group": "right", "x": 8.55, "y": 0.3, "w": 0.9, "h": 3.0, "color": "#1b1d22", "r": 0.05}
+  ],
+  "skins": [
+    {"group": "left", "image": "corne-skin/left.png", "x": -0.35, "y": -0.2, "w": 7.7, "h": 5.3},
+    {"group": "right", "image": "corne-skin/right.png", "x": 8.15, "y": -0.2, "w": 7.7, "h": 5.3}
+  ],
+  "skinLegends": true,
+  "remapCleaned": true,
+  "cap": {"inset": [0.015, 0.012, 0.015, 0.012], "radius": 0.07}
+}

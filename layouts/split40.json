@@ -1,0 +1,74 @@
+{
+  "name": "Split 40",
+  "spacing": {"x": 18, "y": 16.8429},
+  "layers": [
+    {"name": "Base", "short": "abc"},
+    {"name": "Number", "short": "123"},
+    {"name": "Nav", "short": "nav"}
+  ],
+  "groups": {
+    "left": {"key": "#8c8c8c", "keyTop": "#9d9d9d", "legend": "#f4f4f4", "case": "#f1f1ef", "plate": "#3a3a3a", "splitShift": 0},
+    "right": {"key": "#e6e3dd", "keyTop": "#f3f1ec", "legend": "#3c3c3c", "case": "#f1f1ef", "plate": "#3a3a3a", "splitShift": 1}
+  },
+  "keys": [
+    {"id": "L30", "group": "left", "x": 3.15, "y": 0.0, "actions": ["e", "3", "f3"]},
+    {"id": "L40", "group": "left", "x": 4.15, "y": 0.48, "actions": ["r", "4", "f4"]},
+    {"id": "L20", "group": "left", "x": 2.01, "y": 0.52, "r": -3, "actions": ["w", "2", "f2"]},
+    {"id": "L50", "group": "left", "x": 5.15, "y": 0.67, "actions": ["t", "5", "f5"]},
+    {"id": "L31", "group": "left", "x": 3.15, "y": 1.0, "actions": ["d", "lcmd", "lcmd"]},
+    {"id": "L10", "group": "left", "x": 0.92, "y": 1.15, "r": -8, "actions": ["q", "1", "f1"]},
+    {"id": "L41", "group": "left", "x": 4.15, "y": 1.48, "homing": true, "actions": ["f", "lshift", "lshift"]},
+    {"id": "L21", "group": "left", "x": 2.06, "y": 1.52, "r": -3, "actions": ["s", "lopt", "lopt"]},
+    {"id": "L51", "group": "left", "x": 5.15, "y": 1.67, "actions": ["g", "`", "capslock"]},
+    {"id": "L01", "group": "left", "x": 0.0, "y": 1.83, "r": -8, "actions": ["tab", "esc", "esc"]},
+    {"id": "L32", "group": "left", "x": 3.15, "y": 2.0, "actions": ["c", "mute", "lcmd+c"]},
+    {"id": "L11", "group": "left", "x": 1.06, "y": 2.17, "r": -8, "actions": ["a", "lctrl", "lctrl"]},
+    {"id": "L42", "group": "left", "x": 4.15, "y": 2.48, "actions": ["v", "play", "lcmd+v"]},
+    {"id": "L22", "group": "left", "x": 2.11, "y": 2.52, "r": -3, "actions": ["x", "vol+", "lcmd+x"]},
+    {"id": "L52", "group": "left", "x": 5.15, "y": 2.67, "actions": ["b", "next", "lcmd+lshift+z"]},
+    {"id": "L02", "group": "left", "x": 0.14, "y": 2.85, "r": -8, "actions": ["lshift"]},
+    {"id": "L12", "group": "left", "x": 1.2, "y": 3.19, "r": -8, "actions": ["z", "vol-", "lcmd+z"]},
+    {"id": "LT0", "group": "left", "x": 4.15, "y": 3.76, "actions": ["lcmd"]},
+    {"id": "LT1", "group": "left", "x": 5.23, "y": 3.89, "r": 6, "homing": true, "actions": ["mo(1)"]},
+    {"id": "LT2", "group": "left", "x": 6.27, "y": 4.32, "r": 16, "actions": ["space"]},
+    {"id": "R30", "group": "right", "x": 12.45, "y": 0.0, "actions": ["i", "8", "f8"]},
+    {"id": "R40", "group": "right", "x": 11.45, "y": 0.48, "actions": ["u", "7", "f7"]},
+    {"id": "R20", "group": "right", "x": 13.59, "y": 0.52, "r": 3, "actions": ["o", "9", "f9"]},
+    {"id": "R50", "group": "right", "x": 10.45, "y": 0.67, "actions": ["y", "6", "f6"]},
+    {"id": "R31", "group": "right", "x": 12.45, "y": 1.0, "actions": ["k", "[", "up"]},
+    {"id": "R10", "group": "right", "x": 14.68, "y": 1.15, "r": 8, "actions": ["p", "0", "f10"]},
+    {"id": "R41", "group": "right", "x": 11.45, "y": 1.48, "homing": true, "actions": ["j", "=", "down"]},
+    {"id": "R21", "group": "right", "x": 13.54, "y": 1.52, "r": 3, "actions": ["l", "]", "right"]},
+    {"id": "R51", "group": "right", "x": 10.45, "y": 1.67, "actions": ["h", "-", "left"]},
+    {"id": "R01", "group": "right", "x": 15.6, "y": 1.83, "r": 8, "actions": ["'"]},
+    {"id": "R32", "group": "right", "x": 12.45, "y": 2.0, "actions": [",", "shift+[", "pgup"]},
+    {"id": "R11", "group": "right", "x": 14.54, "y": 2.17, "r": 8, "actions": [";", "\\", "del"]},
+    {"id": "R42", "group": "right", "x": 11.45, "y": 2.48, "actions": ["m", "shift+=", "pgdn"]},
+    {"id": "R22", "group": "right", "x": 13.49, "y": 2.52, "r": 3, "actions": [".", "shift+]", "end"]},
+    {"id": "R52", "group": "right", "x": 10.45, "y": 2.67, "actions": ["n", "shift+-", "home"]},
+    {"id": "R02", "group": "right", "x": 15.46, "y": 2.85, "r": 8, "actions": ["rshift", null, "f12"]},
+    {"id": "R12", "group": "right", "x": 14.4, "y": 3.19, "r": 8, "actions": ["/", "shift+\\", "f11"]},
+    {"id": "RT0", "group": "right", "x": 11.45, "y": 3.76, "actions": ["bspc"]},
+    {"id": "RT1", "group": "right", "x": 10.37, "y": 3.89, "r": -6, "homing": true, "actions": ["mo(2)"]},
+    {"id": "RT2", "group": "right", "x": 9.33, "y": 4.32, "r": -16, "actions": ["enter"]}
+  ],
+  "encoders": [
+    {"id": "LE", "group": "left", "x": 6.84, "y": 2.6, "d": 1.07, "style": "black", "ccw": "vol-", "cw": "vol+", "press": "mute"},
+    {"id": "RE", "group": "right", "x": 9.76, "y": 2.6, "d": 1.07, "style": "silver", "ccw": "bright-", "cw": "bright+", "press": "play"}
+  ],
+  "covers": [
+    {"group": "left", "x": 6.17, "y": -0.07, "w": 1.39, "h": 3.92},
+    {"group": "right", "x": 9.04, "y": -0.07, "w": 1.39, "h": 3.92},
+    {"group": "left", "x": 0.14, "y": 3.98, "w": 4.03, "h": 0.84},
+    {"group": "right", "x": 12.43, "y": 3.98, "w": 4.03, "h": 0.84},
+    {"group": "left", "x": 2.24, "y": 3.6, "w": 1.93, "h": 1.22},
+    {"group": "right", "x": 12.43, "y": 3.6, "w": 1.93, "h": 1.22},
+    {"group": "left", "x": 3.17, "y": 3.1, "w": 1.0, "h": 1.72},
+    {"group": "right", "x": 12.43, "y": 3.1, "w": 1.0, "h": 1.72}
+  ],
+  "cap": {"inset": [0.025, 0.03, 0.025, 0.02], "radius": 0.2},
+  "skins": [
+    {"group": "left", "image": "split40-skin/left.png", "x": -0.3403, "y": -0.2582, "w": 8.1109, "h": 6.0769},
+    {"group": "right", "image": "split40-skin/right.png", "x": 8.8321, "y": -0.2795, "w": 8.016, "h": 6.0677}
+  ]
+}

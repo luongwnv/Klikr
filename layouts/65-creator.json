@@ -1,0 +1,100 @@
+{
+  "name": "65% Creator",
+  "spacing": {"x": 19.05, "y": 19.05},
+  "layers": [
+    {"name": "Base", "short": "abc"},
+    {"name": "Fn", "short": "fn"}
+  ],
+  "groups": {
+    "board": {"key": "#3a3a3c", "keyTop": "#4a4a4c", "legend": "#e6e6e6", "case": "#4a4c50", "plate": "#141414"}
+  },
+  "keys": [
+    {"id": "r0k0", "x": 0.0, "y": 0, "actions": ["esc"], "labels": ["✱"], "group": "board"},
+    {"id": "r0k1", "x": 1.0, "y": 0, "actions": ["1", "f1"], "group": "board"},
+    {"id": "r0k2", "x": 2.0, "y": 0, "actions": ["2", "f2"], "group": "board"},
+    {"id": "r0k3", "x": 3.0, "y": 0, "actions": ["3", "f3"], "group": "board"},
+    {"id": "r0k4", "x": 4.0, "y": 0, "actions": ["4", "f4"], "group": "board"},
+    {"id": "r0k5", "x": 5.0, "y": 0, "actions": ["5", "f5"], "group": "board"},
+    {"id": "r0k6", "x": 6.0, "y": 0, "actions": ["6", "f6"], "group": "board"},
+    {"id": "r0k7", "x": 7.0, "y": 0, "actions": ["7", "f7"], "group": "board"},
+    {"id": "r0k8", "x": 8.0, "y": 0, "actions": ["8", "f8"], "group": "board"},
+    {"id": "r0k9", "x": 9.0, "y": 0, "actions": ["9", "f9"], "group": "board"},
+    {"id": "r0k10", "x": 10.0, "y": 0, "actions": ["0", "f10"], "group": "board"},
+    {"id": "r0k11", "x": 11.0, "y": 0, "actions": ["-", "f11"], "group": "board"},
+    {"id": "r0k12", "x": 12.0, "y": 0, "actions": ["=", "f12"], "group": "board"},
+    {"id": "r0k13", "x": 13.0, "y": 0, "w": 2, "actions": ["bspc", "del"], "group": "board"},
+    {"id": "r1k14", "x": 0.0, "y": 1, "w": 1.5, "actions": ["tab"], "group": "board"},
+    {"id": "r1k15", "x": 1.5, "y": 1, "actions": ["q"], "group": "board"},
+    {"id": "r1k16", "x": 2.5, "y": 1, "actions": ["w"], "group": "board"},
+    {"id": "r1k17", "x": 3.5, "y": 1, "actions": ["e"], "group": "board"},
+    {"id": "r1k18", "x": 4.5, "y": 1, "actions": ["r"], "group": "board"},
+    {"id": "r1k19", "x": 5.5, "y": 1, "actions": ["t"], "group": "board"},
+    {"id": "r1k20", "x": 6.5, "y": 1, "actions": ["y"], "group": "board"},
+    {"id": "r1k21", "x": 7.5, "y": 1, "actions": ["u"], "group": "board"},
+    {"id": "r1k22", "x": 8.5, "y": 1, "actions": ["i"], "group": "board"},
+    {"id": "r1k23", "x": 9.5, "y": 1, "actions": ["o"], "group": "board"},
+    {"id": "r1k24", "x": 10.5, "y": 1, "actions": ["p"], "group": "board"},
+    {"id": "r1k25", "x": 11.5, "y": 1, "actions": ["["], "group": "board"},
+    {"id": "r1k26", "x": 12.5, "y": 1, "actions": ["]"], "group": "board"},
+    {"id": "r1k27", "x": 13.5, "y": 1, "w": 1.5, "actions": ["\\"], "group": "board"},
+    {"id": "r1k28", "x": 15.0, "y": 1, "actions": ["`"], "group": "board"},
+    {"id": "r2k29", "x": 0.0, "y": 2, "w": 1.75, "actions": ["capslock"], "group": "board"},
+    {"id": "r2k30", "x": 1.75, "y": 2, "actions": ["a"], "group": "board"},
+    {"id": "r2k31", "x": 2.75, "y": 2, "actions": ["s"], "group": "board"},
+    {"id": "r2k32", "x": 3.75, "y": 2, "actions": ["d"], "group": "board"},
+    {"id": "r2k33", "x": 4.75, "y": 2, "actions": ["f"], "group": "board"},
+    {"id": "r2k34", "x": 5.75, "y": 2, "actions": ["g"], "group": "board"},
+    {"id": "r2k35", "x": 6.75, "y": 2, "actions": ["h"], "group": "board"},
+    {"id": "r2k36", "x": 7.75, "y": 2, "actions": ["j"], "group": "board"},
+    {"id": "r2k37", "x": 8.75, "y": 2, "actions": ["k"], "group": "board"},
+    {"id": "r2k38", "x": 9.75, "y": 2, "actions": ["l"], "group": "board"},
+    {"id": "r2k39", "x": 10.75, "y": 2, "actions": [";"], "group": "board"},
+    {"id": "r2k40", "x": 11.75, "y": 2, "actions": ["'"], "group": "board"},
+    {"id": "r2k41", "x": 12.75, "y": 2, "w": 2.25, "actions": ["enter"], "group": "board"},
+    {"id": "r2k42", "x": 15.0, "y": 2, "actions": ["f16"], "labels": ["wrk"], "group": "board"},
+    {"id": "r3k43", "x": 0.0, "y": 3, "w": 2.25, "actions": ["lshift"], "group": "board"},
+    {"id": "r3k44", "x": 2.25, "y": 3, "actions": ["z"], "group": "board"},
+    {"id": "r3k45", "x": 3.25, "y": 3, "actions": ["x"], "group": "board"},
+    {"id": "r3k46", "x": 4.25, "y": 3, "actions": ["c"], "group": "board"},
+    {"id": "r3k47", "x": 5.25, "y": 3, "actions": ["v"], "group": "board"},
+    {"id": "r3k48", "x": 6.25, "y": 3, "actions": ["b"], "group": "board"},
+    {"id": "r3k49", "x": 7.25, "y": 3, "actions": ["n"], "group": "board"},
+    {"id": "r3k50", "x": 8.25, "y": 3, "actions": ["m"], "group": "board"},
+    {"id": "r3k51", "x": 9.25, "y": 3, "actions": [","], "group": "board"},
+    {"id": "r3k52", "x": 10.25, "y": 3, "actions": ["."], "group": "board"},
+    {"id": "r3k53", "x": 11.25, "y": 3, "actions": ["/"], "group": "board"},
+    {"id": "r3k54", "x": 12.25, "y": 3, "w": 1.75, "actions": ["rshift"], "group": "board"},
+    {"id": "r3k55", "x": 14.0, "y": 3, "actions": ["up", "pgup"], "group": "board"},
+    {"id": "r3k56", "x": 15.0, "y": 3, "actions": ["f17"], "labels": ["run"], "group": "board"},
+    {"id": "r4k57", "x": 0.0, "y": 4, "actions": ["mo(1)"], "labels": ["fp"], "group": "board"},
+    {"id": "r4k58", "x": 1.0, "y": 4, "actions": ["lctrl"], "group": "board"},
+    {"id": "r4k59", "x": 2.0, "y": 4, "actions": ["lopt"], "group": "board"},
+    {"id": "r4k60", "x": 3.0, "y": 4, "w": 1.25, "actions": ["lcmd"], "group": "board"},
+    {"id": "r4k61", "x": 4.25, "y": 4, "w": 6.25, "actions": ["space"], "group": "board"},
+    {"id": "r4k62", "x": 10.5, "y": 4, "w": 1.5, "actions": ["rcmd"], "group": "board"},
+    {"id": "r4k63", "x": 12.0, "y": 4, "actions": ["ropt"], "group": "board"},
+    {"id": "r4k64", "x": 13.0, "y": 4, "actions": ["left", "home"], "group": "board"},
+    {"id": "r4k65", "x": 14.0, "y": 4, "actions": ["down", "pgdn"], "group": "board"},
+    {"id": "r4k66", "x": 15.0, "y": 4, "actions": ["right", "end"], "group": "board"}
+  ],
+  "cases": [
+    {"x": -2.25, "y": -0.85, "w": 18.6, "h": 6.1, "r": 0.2}
+  ],
+  "encoders": [
+    {"id": "K1", "group": "board", "x": -1.409, "y": 0.521, "d": 0.505, "style": "silver", "ccw": "vol-", "cw": "vol+", "press": "mute"},
+    {"id": "K2", "group": "board", "x": -0.677, "y": 0.52, "d": 0.505, "style": "silver", "ccw": "bright-", "cw": "bright+", "press": "play"},
+    {"id": "K3", "group": "board", "x": 15.371, "y": 0.503, "d": 0.505, "style": "silver", "ccw": "vol-", "cw": "vol+", "press": "mute"}
+  ],
+  "covers": [
+    {"group": "board", "x": -1.642, "y": 1.088, "w": 1.319, "h": 2.175, "color": "#121212", "r": 0.12}
+  ],
+  "displays": [
+    {"group": "board", "x": -1.396, "y": 1.683, "w": 0.93, "h": 1.153, "lines": [{"format": "hour", "size": 0.6, "y": 0.25, "x": 0.04, "align": "left", "color": "#ffffff", "weight": "thin"}, {"format": "minute", "size": 0.6, "y": 0.73, "x": 0.04, "align": "left", "color": "#ffffff", "weight": "thin"}, {"format": "ampm", "size": 0.105, "y": 0.93, "x": 0.94, "align": "right", "color": "#ffffff", "weight": "regular"}]},
+    {"group": "board", "x": -1.537, "y": 3.134, "w": 1.08, "h": 0.204, "lines": [{"format": "btdot", "size": 0.45, "y": 0.5, "x": 0.078, "color": "#2f7bff"}, {"format": "bluetooth", "size": 0.55, "y": 0.5, "x": 0.2, "color": "#ffffff"}, {"format": "battery", "size": 0.36, "y": 0.5, "x": 0.953, "align": "right", "color": "#ffffff"}]}
+  ],
+  "skins": [
+    {"group": "board", "image": "65-creator-skin/board.png", "x": -2.4, "y": -0.9, "w": 18.8, "h": 6.25}
+  ],
+  "skinLegends": true,
+  "cap": {"inset": [0.125, 0.09, 0.195, 0.09], "radius": 0.16}
+}
