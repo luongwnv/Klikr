@@ -497,7 +497,8 @@ def nut75():
     fn_row_media(keys)
     data = board(keys, FN_LAYERS, {'key': '#e9e9e6', 'keyTop': '#f7f7f5', 'legend': '#d4561c', 'case': '#e8792e',
                                    'plate': '#c9601f'}, {'x': -0.33, 'y': -0.37, 'w': 16.66, 'h': 7.1, 'r': 0.15})
-    data['encoders'] = [{'id': 'K1', 'group': 'board', 'x': 15.78, 'y': 4.83, 'd': 0.62, 'style': 'silver',
+    data['encoders'] = [{'id': 'K1', 'group': 'board', 'x': 15.83, 'y': 4.87, 'd': 0.57, 'shape': 'roller', 'w': 0.57, 'h': 0.31,
+                         'style': 'silver',
                          'ccw': 'vol-', 'cw': 'vol+', 'press': 'mute'}]
     return data
 
@@ -775,7 +776,9 @@ COLORWAYS = {
               ('silver', 'Silver', '#c9cbce', 'keyboards/weikav-nut75-silver.jpg',
                dict(points=ortho_points((85, 335), 51.9, 16, 6.27, 52.2), ppu=56,
                     mask=('rect', -0.25, -0.4, 16.28, 6.72, 0.12), dim=[(15.19, 4.81, 0.22, 0.46)],
-                    leds=[{'kind': 'caps', 'x': 15.19, 'y': 4.81, 'w': 0.11, 'h': 0.32, 'color': '#3fd0ff'}]))],
+                    leds=[{'kind': 'caps', 'x': 15.19, 'y': 4.81, 'w': 0.11, 'h': 0.32, 'color': '#3fd0ff'}],
+                    encoders=[{'id': 'K1', 'x': 15.73, 'y': 4.8, 'd': 0.66, 'shape': 'roller', 'w': 0.66, 'h': 0.34,
+                               'style': 'silver', 'ccw': 'vol-', 'cw': 'vol+', 'press': 'mute'}]))],
     'pro-x-tkl': [('black', 'Black', '#1c1d1f', 'keyboards/logi-pro-x-tkl-black.png'),
                   ('white', 'White', '#f2f2f2', 'keyboards/logi-pro-x-tkl-white.png'),
                   ('magenta', 'Magenta', '#e0418f', 'keyboards/logi-pro-x-tkl-magenta.png')],
@@ -902,6 +905,12 @@ def make_skin(lid, spec, keys, ppu=120):
     H = homography(spec['points'])
     err = [math.dist(apply_h(H, u), p) for p, u in spec['points']]
     x0, y0, x1, y1 = spec['region']
+    # Small photos are drawn about twice their size on Retina screens: render them larger and sharpen
+    cu, cv = (x0 + x1) / 2, (y0 + y1) / 2
+    src_ppu = math.dist(apply_h(H, (cu, cv)), apply_h(H, (cu + 1, cv)))
+    enhance = spec.get('enhance', True) and src_ppu < 80
+    if enhance:
+        ppu = max(ppu, 110)
     W, Hh = int((x1 - x0) * ppu), int((y1 - y0) * ppu)
     A = np.array([[1 / ppu, 0, x0], [0, 1 / ppu, y0], [0, 0, 1]])
     M = H @ A
@@ -909,6 +918,10 @@ def make_skin(lid, spec, keys, ppu=120):
     photo = Image.open(os.path.join(ROOT, spec['photo']))
     photo = photo.convert('RGBA')
     warped = photo.transform((W, Hh), Image.Transform.PERSPECTIVE, data=tuple(M.flatten()[:8]), resample=Image.Resampling.BICUBIC)
+    if enhance:
+        rgb, a = warped.convert('RGB'), warped.getchannel('A')
+        rgb = rgb.filter(ImageFilter.UnsharpMask(radius=max(1.0, ppu / src_ppu * 0.9), percent=70, threshold=1))
+        warped = Image.merge('RGBA', (*rgb.split(), a))
 
     kind = spec['mask'][0]
     if kind == 'alpha':
@@ -1091,17 +1104,124 @@ def make_skin(lid, spec, keys, ppu=120):
         fg = nd.binary_opening(fg, iterations=4)
         alpha = Image.fromarray((fg * 255).astype('uint8')).filter(ImageFilter.GaussianBlur(1.2))
     warped.putalpha(alpha)
+    if spec.get('flatten_light'):
+        # Even out uneven lighting (a sunlit half, a shadowed half) toward the board's median brightness
+        arr = np.asarray(warped).astype(float)
+        inside = (arr[..., 3] > 128).astype(float)
+        lum = arr[..., :3].mean(axis=2)
+        sigma = ppu * 1.2
+        illum = nd.gaussian_filter(lum * inside, sigma) / np.maximum(nd.gaussian_filter(inside, sigma), 1e-3)
+        target = np.median(illum[inside > 0])
+        gain = np.clip(target / np.maximum(illum, 1), 0.55, 1.8) ** spec['flatten_light']
+        arr[..., :3] = np.clip(arr[..., :3] * gain[..., None], 0, 255)
+        warped = Image.fromarray(arr.astype('uint8'), 'RGBA')
     warped = dim_lights(warped, spec.get('dim', []), x0, y0, ppu)
     warped = clean_displays(lid, warped, H, x0, y0, ppu)
     warped = clean_remapped(warped, [k for k in keys if k.get('remap') and k.get('group') == spec.get('group', k.get('group'))],
                             x0, y0, ppu)
+    key_caps = None
+    if spec.get('fit_caps', True):
+        base = CAPS.get(lid, ([0.03, 0.03, 0.03, 0.03], 0.1))[0]
+        group_keys = [k for k in keys if k.get('group') == spec.get('group', k.get('group'))]
+        # Colourway photos keep their own per-key caps; the plain skin writes them onto the keys
+        key_caps = {} if spec.get('variant') else None
+        n = fit_caps(warped, group_keys, x0, y0, ppu, base, key_caps)
+        print(f'  {lid}: per-key caps fitted on {n} keys')
     skin_dir = os.path.join(OUT, f'{lid}-skin')
     os.makedirs(skin_dir, exist_ok=True)
     name = f"{spec['variant']}-{spec.get('group', 'board')}.png" if spec.get('variant') else f"{spec.get('group', 'board')}.png"
     warped.save(os.path.join(skin_dir, name), optimize=True)
     print(f'  {lid}/{name}: {W}x{Hh}, fit error px mean {sum(err) / len(err):.1f} max {max(err):.1f}')
-    return {'group': spec.get('group', 'board'), 'image': f'{lid}-skin/{name}',
+    skin = {'group': spec.get('group', 'board'), 'image': f'{lid}-skin/{name}',
             'x': x0, 'y': y0, 'w': round(x1 - x0, 4), 'h': round(y1 - y0, 4)}
+    if key_caps:
+        skin['_caps'] = key_caps
+    return skin
+
+
+def fit_caps(img, keys, x0, y0, ppu, base, out=None):
+    """Measure where each keycap's outline really sits in the warped photo and set per-key insets.
+
+    Each side is found as the strongest brightness edge near the expected inset, then a smooth model
+    (inset = a + b*x + c*y over the board) is fitted so printed legends or odd caps cannot throw it off.
+    Tall caps photographed from above lean outward, which is what the linear terms capture."""
+    import numpy as np
+    from scipy import ndimage as nd
+    arr = np.asarray(img).astype(float)
+    lum = nd.gaussian_filter(arr[..., :3].mean(axis=2), 1.0)
+    alpha = arr[..., 3]
+    gy, gx = np.abs(np.gradient(lum))
+    Hh, W = lum.shape
+    u = ppu
+    samples = {s: [] for s in range(4)}
+    plain = [k for k in keys if 'x2' not in k]
+    margin = 0.12
+    for k in plain:
+        w, h = k.get('w', 1), k.get('h', 1)
+        rot = math.radians(k.get('r', 0))
+        cx, cy = (k['x'] + w / 2 - x0) * u, (k['y'] + h / 2 - y0) * u
+        if not (2 <= cx < W - 3 and 2 <= cy < Hh - 3) or alpha[int(cy), int(cx)] < 200:
+            continue
+        # Sample the key in its own (rotated) frame so tilted keys are measured like straight ones
+        nx, ny = int((w + 2 * margin) * u), int((h + 2 * margin) * u)
+        lx = np.arange(nx) / u - (w / 2 + margin)
+        ly = np.arange(ny) / u - (h / 2 + margin)
+        LX, LY = np.meshgrid(lx, ly)
+        px = cx + (LX * math.cos(rot) - LY * math.sin(rot)) * u
+        py = cy + (LX * math.sin(rot) + LY * math.cos(rot)) * u
+        patch = nd.map_coordinates(lum, [py, px], order=1, mode='nearest')
+        pgy, pgx = np.abs(np.gradient(patch))
+        X0, X1 = margin * u, (margin + w) * u
+        Y0, Y1 = margin * u, (margin + h) * u
+        rows = slice(int(Y0 + 0.3 * (Y1 - Y0)), int(Y0 + 0.7 * (Y1 - Y0)) + 1)
+        cols = slice(int(X0 + 0.3 * (X1 - X0)), int(X0 + 0.7 * (X1 - X0)) + 1)
+
+        def pick(profile, start, expected):
+            if len(profile) == 0:
+                return expected
+            pos = np.arange(len(profile)) + start
+            prior = np.exp(-0.5 * ((pos - expected) / (0.12 * u)) ** 2)
+            return pos[int(np.argmax(profile * (0.35 + prior)))]
+        lo, hi = max(0, int(X0 - 0.06 * u)), int(X0 + 0.3 * u)
+        xl = pick(pgx[rows, lo:hi].mean(axis=0), lo, X0 + base[0] * u)
+        lo, hi = int(X1 - 0.3 * u), min(nx, int(X1 + 0.06 * u))
+        xr = pick(pgx[rows, lo:hi].mean(axis=0), lo, X1 - base[2] * u)
+        lo, hi = max(0, int(Y0 - 0.06 * u)), int(Y0 + 0.3 * u)
+        yt = pick(pgy[lo:hi, cols].mean(axis=1), lo, Y0 + base[1] * u)
+        lo, hi = int(Y1 - 0.35 * u), min(ny, int(Y1 + 0.06 * u))
+        yb = pick(pgy[lo:hi, cols].mean(axis=1), lo, Y1 - base[3] * u)
+        pu, pv = k['x'] + w / 2, k['y'] + h / 2
+        for side, val in enumerate(((xl - X0) / u, (yt - Y0) / u, (X1 - xr) / u, (Y1 - yb) / u)):
+            samples[side].append((pu, pv, val))
+    if len(samples[0]) < 8:
+        return 0
+    models = []
+    for side in range(4):
+        a = np.array(samples[side])
+        A = np.c_[np.ones(len(a)), a[:, 0], a[:, 1]]
+        keep = np.ones(len(a), bool)
+        for _ in range(4):
+            coef, *_ = np.linalg.lstsq(A[keep], a[keep, 2], rcond=None)
+            res = np.abs(A @ coef - a[:, 2])
+            mad = np.median(res[keep]) + 1e-3
+            keep = res < 2.5 * mad + 0.01
+        if np.median(res[keep]) > 0.05:
+            coef = np.array([np.median(a[:, 2]), 0, 0])
+        models.append(coef)
+    changed = 0
+    for k in plain:
+        w, h = k.get('w', 1), k.get('h', 1)
+        pu, pv = k['x'] + w / 2, k['y'] + h / 2
+        ins = [float(np.clip(m[0] + m[1] * pu + m[2] * pv, -0.05, 0.3)) for m in models]
+        if out is not None:
+            out[k['id']] = [round(i, 3) for i in ins]
+            changed += 1
+        elif max(abs(i - b) for i, b in zip(ins, base)) > 0.01:
+            k['cap'] = [round(i, 3) for i in ins]
+            changed += 1
+        else:
+            k.pop('cap', None)
+    return changed
 
 
 def snap_rect(img, rect, x0, y0, ppu, inward=0.18, outward=0.06):
@@ -1331,23 +1451,44 @@ def main():
                 pass
             if skins and lid in COLORWAYS:
                 data['colorways'] = [{'id': cid, 'name': cname, 'swatch': sw,
-                                      **({'leds': [{'group': next(iter(data['groups'])), **l} for l in extra[0]['leds']]}
-                                         if extra and 'leds' in extra[0] else {}),
+                                      **{key: [{'group': next(iter(data['groups'])), **l} for l in extra[0][key]]
+                                         for key in ('leds', 'encoders') if extra and key in extra[0]},
                                       'skins': [make_skin(lid, sp, data['keys'], ppu=sp.get('ppu', 120)) for sp in
                                                 [{**s, 'photo': photo, 'variant': cid, **(extra[0] if extra else {})}
                                                  for s in SKINS[lid]]]}
                                      for cid, cname, sw, photo, *extra in COLORWAYS[lid]]
+                for cw in data['colorways']:
+                    caps = {}
+                    for sk in cw['skins']:
+                        caps.update(sk.pop('_caps', {}))
+                    if caps:
+                        cw['keyCaps'] = caps
+                for k in data['keys']:
+                    if k['id'] in data['colorways'][0].get('keyCaps', {}):
+                        k['cap'] = data['colorways'][0]['keyCaps'][k['id']]
                 data['skins'] = data['colorways'][0]['skins']
             elif skins:
                 data['skins'] = [make_skin(lid, s, data['keys'], ppu=s.get('ppu', 120)) for s in SKINS[lid]]
             elif os.path.exists(path):
                 prev = json.load(open(path))
+                caps_by_id = {k['id']: k['cap'] for k in prev.get('keys', []) if 'cap' in k}
+                for k in data['keys']:
+                    if k['id'] in caps_by_id:
+                        k['cap'] = caps_by_id[k['id']]
                 for key in ('skins', 'colorways'):
                     if key in prev:
                         data[key] = prev[key]
                 for key in ('encoders',):
                     if key in prev and key not in data:
                         data[key] = prev[key]
+            if '--fit-caps' in sys.argv and 'colorways' not in data:
+                from PIL import Image
+                for sk in data.get('skins', []):
+                    img = Image.open(os.path.join(OUT, sk['image'])).convert('RGBA')
+                    group_keys = [k for k in data['keys'] if k.get('group') == sk['group']]
+                    n = fit_caps(img, group_keys, sk['x'], sk['y'], img.width / sk['w'],
+                                 CAPS.get(lid, ([0.03, 0.03, 0.03, 0.03], 0.1))[0])
+                    print(f'  {lid}/{sk["group"]}: per-key caps fitted on {n} keys')
             data['skinLegends'] = True  # every photo here has printed legends
             if any(k.get('remap') for k in data['keys']):
                 data['remapCleaned'] = True

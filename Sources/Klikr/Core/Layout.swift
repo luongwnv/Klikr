@@ -35,15 +35,21 @@ struct KeySpec: Codable {
     var legend: String?
     /// Printed legend on the skin photo does not match this key's function.
     var remap: Bool?
+    /// This key's own keycap insets [left, top, right, bottom] in key units, measured on the photo.
+    var cap: [Double]?
 }
 
 /// Encoder x/y is the knob center, not its top-left corner.
-struct EncoderSpec: Codable {
+struct EncoderSpec: Codable, Hashable {
     var id: String
     var group: String?
     var x: Double
     var y: Double
     var d: Double?
+    /// "roller": a wheel seen from above (w x h), whose surface rolls across its short side when turned.
+    var shape: String?
+    var w: Double?
+    var h: Double?
     var style: String?
     var ccw: String?
     var cw: String?
@@ -120,8 +126,11 @@ struct ColorwaySpec: Codable, Hashable {
     var name: String
     var swatch: String?
     var skins: [SkinSpec]
-    /// Indicator lights measured on this colourway's photo, when they sit differently from the default one.
+    /// Indicator lights and knobs measured on this colourway's photo, when they sit differently from the default one.
     var leds: [LedSpec]?
+    var encoders: [EncoderSpec]?
+    /// Keycap insets per key id measured on this colourway's photo.
+    var keyCaps: [String: [Double]]?
 }
 
 struct LayoutFile: Codable {
@@ -190,6 +199,14 @@ struct Layout {
         var f = file
         f.skins = cw.skins
         if let leds = cw.leds { f.leds = leds }
+        if let encoders = cw.encoders { f.encoders = encoders }
+        if let caps = cw.keyCaps {
+            f.keys = f.keys.map { k in
+                var k = k
+                k.cap = caps[k.id] ?? k.cap
+                return k
+            }
+        }
         return Layout(id: self.id, file: f, directory: directory)
     }
 

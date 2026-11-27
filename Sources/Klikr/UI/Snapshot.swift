@@ -36,6 +36,7 @@ enum Snapshot {
         let view = KeyboardView(engine: engine, labels: LabelProvider())
         view.animatesTravel = false
         view.debugOutlines = CommandLine.arguments.contains("--outline")
+        view.debugCapOutlines = CommandLine.arguments.contains("--cap-outline")
         view.configure(scale: 2, splitGap: 0, photo: !CommandLine.arguments.contains("--vector"),
                        legends: !CommandLine.arguments.contains("--no-legends"))
         if demo {

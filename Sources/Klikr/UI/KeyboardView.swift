@@ -19,6 +19,7 @@ final class KeyboardView: NSView {
     var onMoved: ((NSPoint) -> Void)?
     var onClose: (() -> Void)?
     var debugOutlines = false
+    var debugCapOutlines = false
     private var closeShown = false
     private var closeTimer: Timer?
     var contextMenuProvider: (() -> NSMenu)?
@@ -252,6 +253,17 @@ final class KeyboardView: NSView {
     }
 
     private func drawDebugOutlines(_ ctx: CGContext) {
+        if debugCapOutlines {
+            ctx.setStrokeColor(NSColor.systemCyan.cgColor)
+            ctx.setLineWidth(max(1.5, geo.unit * 0.025))
+            for k in geo.keys {
+                ctx.saveGState()
+                ctx.concatenate(k.transform)
+                ctx.addPath(capOutline(k))
+                ctx.strokePath()
+                ctx.restoreGState()
+            }
+        }
         guard debugOutlines else { return }
         ctx.setStrokeColor(NSColor.systemRed.cgColor)
         ctx.setLineWidth(1)
@@ -436,6 +448,11 @@ final class KeyboardView: NSView {
         guard let sk = skin(for: e.group) else { return }
         let angle = engine.encoderAngles[j] ?? 0
         let pressed = engine.virtualEncoders.contains(j) || engine.physicalEncoders.contains(j)
+        if let rect = e.rollerRect, let size = e.roller {
+            guard angle != 0 || pressed else { return }
+            drawRoller(ctx, rect: rect, size: size, angle: angle, pressed: pressed) { ctx in drawSkin(ctx, sk) }
+            return
+        }
         guard angle != 0 || pressed else { return }
         let r = e.radius * 0.97
         let circle = CGRect(x: e.center.x - r, y: e.center.y - r, width: 2 * r, height: 2 * r)
@@ -471,57 +488,31 @@ final class KeyboardView: NSView {
         default: break
         }
         let down = physical || virtual
-        let (cap, capRadius) = capShape(k)
-        let capPath = capOutline(k)
+        let (cap, _) = capShape(k)
         let style = engine.layout.style(k.group)
 
         ctx.saveGState()
         ctx.concatenate(k.transform)
 
         let d = depth(i)
-        if abs(d) > 0.004, let sk = skin(for: k.group) {
-            // Sink the keycap: it shrinks toward the plate, darkens, and a dark gap opens around it
-            let sink = max(d, 0)
-            let scale = 1 - 0.075 * d
-            ctx.saveGState()
-            ctx.addPath(capOutline(k, grow: u * 0.01))
-            ctx.clip()
-            if sink > 0 {
-                ctx.setFillColor(NSColor(white: 0.08, alpha: min(1, sink * 1.6)).cgColor)
-                ctx.fill(cap.insetBy(dx: -u * 0.05, dy: -u * 0.05))
-            }
-            ctx.translateBy(x: 0, y: u * 0.022 * d)
-            ctx.scaleBy(x: scale, y: scale)
-            ctx.addPath(capPath)
-            ctx.clip()
-            ctx.concatenate(k.transform.inverted())
-            drawSkin(ctx, sk)
-            ctx.restoreGState()
-
-            if sink > 0 {
-                ctx.saveGState()
-                ctx.translateBy(x: 0, y: u * 0.022 * d)
-                ctx.scaleBy(x: scale, y: scale)
-                ctx.setFillColor(NSColor.black.withAlphaComponent(0.14 * sink).cgColor)
-                fill(ctx, capPath)
-                let accent = down ? (physical ? physicalAccent : virtualAccent) : (travelAccent(i) ?? virtualAccent)
-                ctx.setFillColor(accent.withAlphaComponent(0.28 * sink).cgColor)
-                fill(ctx, capPath)
-                ctx.restoreGState()
-            }
-        }
-        if !down, latch == .locked {
-            ctx.setFillColor(virtualAccent.withAlphaComponent(0.3).cgColor)
-            fill(ctx, capPath)
-        }
-
-        if down || latch != nil {
-            // Ring traced just inside the keycap's own outline
-            let lw = max(1.5, u * 0.04)
-            let ringPath = capOutline(k, grow: -lw / 2, radius: capRadius - lw / 2)
-            ctx.setStrokeColor((physical ? physicalAccent : virtualAccent).cgColor)
+        // The colour fades in with the key's travel and out again on release
+        let strength = max(down || latch != nil ? 1 : 0, min(1, max(d, 0)))
+        if strength > 0.01 {
+            // Colour the whole key cell, which sits exactly on the photo's key wherever the cap leans
+            let accent = down ? (physical ? physicalAccent : virtualAccent) : (latch != nil ? virtualAccent : travelAccent(i) ?? virtualAccent)
+            let lw = max(1.5, u * 0.03)
+            // Out to the cell's sides and bottom (further where the cap leans past them), but the top stops
+            // at the cap's own top edge, which sits below the cell's in a photo taken from above
+            let c = capInsets(k)
+            let area = k.outline(left: min(-u * 0.005, c.l - u * 0.012), top: max(0, c.t - u * 0.008),
+                                 right: min(-u * 0.005, c.r - u * 0.012), bottom: min(-u * 0.005, c.b - u * 0.012),
+                                 radius: u * 0.07)
+            ctx.setFillColor(accent.withAlphaComponent((latch == .locked && !down ? 0.42 : 0.55) * strength).cgColor)
+            fill(ctx, area)
+            ctx.setStrokeColor(accent.withAlphaComponent(strength).cgColor)
             ctx.setLineWidth(lw)
-            ctx.addPath(ringPath)
+            ctx.setLineJoin(.round)
+            ctx.addPath(area)
             ctx.strokePath()
         }
 
@@ -549,9 +540,9 @@ final class KeyboardView: NSView {
     }
 
     /// Keycap silhouette insets (left, top, right, bottom) and corner radius, from the layout's measured cap profile.
-    private func capInsets() -> (l: CGFloat, t: CGFloat, r: CGFloat, b: CGFloat, radius: CGFloat) {
+    private func capInsets(_ k: BoardGeometry.KeyShape? = nil) -> (l: CGFloat, t: CGFloat, r: CGFloat, b: CGFloat, radius: CGFloat) {
         let p = engine.layout.file.cap
-        let ins = p?.inset ?? [0.025, 0.025, 0.025, 0.025]
+        let ins = k?.cap.flatMap { $0.count == 4 ? $0 : nil } ?? p?.inset ?? [0.025, 0.025, 0.025, 0.025]
         let u = geo.unit, uh = geo.unitH
         return (CGFloat(ins[0]) * u, CGFloat(ins[min(1, ins.count - 1)]) * uh,
                 CGFloat(ins[min(2, ins.count - 1)]) * u, CGFloat(ins[min(3, ins.count - 1)]) * uh,
@@ -560,7 +551,7 @@ final class KeyboardView: NSView {
 
     /// Main keycap rectangle (for legends) and corner radius in key-local coordinates.
     private func capShape(_ k: BoardGeometry.KeyShape) -> (CGRect, CGFloat) {
-        let c = capInsets()
+        let c = capInsets(k)
         let rect = CGRect(x: -k.size.width / 2 + c.l, y: -k.size.height / 2 + c.t,
                           width: k.size.width - c.l - c.r, height: k.size.height - c.t - c.b)
         return (rect, min(c.radius, rect.width / 2, rect.height / 2))
@@ -568,7 +559,7 @@ final class KeyboardView: NSView {
 
     /// Full keycap outline (stepped keys included), grown by `grow` on every side.
     private func capOutline(_ k: BoardGeometry.KeyShape, grow: CGFloat = 0, radius: CGFloat? = nil) -> CGPath {
-        let c = capInsets()
+        let c = capInsets(k)
         return k.outline(left: c.l - grow, top: c.t - grow, right: c.r - grow, bottom: c.b - grow,
                          radius: max(0, radius ?? (c.radius + grow)))
     }
@@ -720,9 +711,75 @@ final class KeyboardView: NSView {
         }
     }
 
+    /// A wheel seen from above: its surface (from the photo, or drawn knurls) slides across the short side,
+    /// wrapping around, with cylinder shading so the seam stays hidden at the edges.
+    private func drawRoller(_ ctx: CGContext, rect: CGRect, size: CGSize, angle: CGFloat, pressed: Bool,
+                            surface: (CGContext) -> Void) {
+        let vertical = size.width >= size.height
+        let span = vertical ? size.height : size.width
+        // Only the middle of the wheel is repeated: its shaded rims would show as seams
+        let band = vertical ? rect.insetBy(dx: 0, dy: span * 0.25) : rect.insetBy(dx: span * 0.25, dy: 0)
+        let period = span * 0.5
+        let travel = (angle / (.pi / 8)) * span * 0.28
+        let offset = travel - (travel / period).rounded(.down) * period
+        let clip = CGPath(roundedRect: rect, cornerWidth: min(size.width, size.height) * 0.3,
+                          cornerHeight: min(size.width, size.height) * 0.3, transform: nil)
+        ctx.saveGState()
+        ctx.addPath(clip)
+        ctx.clip()
+        for i in -1...3 {
+            let start = (vertical ? rect.minY : rect.minX) + offset + CGFloat(i - 1) * period
+            let shift = start - (vertical ? band.minY : band.minX)
+            ctx.saveGState()
+            ctx.translateBy(x: vertical ? 0 : shift, y: vertical ? shift : 0)
+            ctx.addRect(band)
+            ctx.clip()
+            surface(ctx)
+            ctx.restoreGState()
+        }
+        let shade = [NSColor.black.withAlphaComponent(0.45), NSColor.black.withAlphaComponent(0),
+                     NSColor.black.withAlphaComponent(0), NSColor.black.withAlphaComponent(0.45)].map(\.cgColor)
+        if let g = CGGradient(colorsSpace: nil, colors: shade as CFArray, locations: [0, 0.3, 0.7, 1]) {
+            let a = vertical ? CGPoint(x: rect.midX, y: rect.minY) : CGPoint(x: rect.minX, y: rect.midY)
+            let b = vertical ? CGPoint(x: rect.midX, y: rect.maxY) : CGPoint(x: rect.maxX, y: rect.midY)
+            ctx.drawLinearGradient(g, start: a, end: b, options: [])
+        }
+        ctx.restoreGState()
+        if pressed {
+            ctx.setStrokeColor(physicalAccent.cgColor)
+            ctx.setLineWidth(max(1.5, geo.unit * 0.04))
+            ctx.addPath(clip)
+            ctx.strokePath()
+        }
+    }
+
     private func drawEncoder(_ ctx: CGContext, _ j: Int) {
         let e = geo.encoders[j]
         let spec = engine.layout.encoders[j]
+        if let rect = e.rollerRect, let size = e.roller {
+            let pressed = engine.virtualEncoders.contains(j) || engine.physicalEncoders.contains(j)
+            let silver = (spec.style ?? "black") == "silver"
+            drawRoller(ctx, rect: rect, size: size, angle: engine.encoderAngles[j] ?? 0, pressed: pressed) { ctx in
+                ctx.setFillColor((silver ? NSColor(white: 0.72, alpha: 1) : NSColor(white: 0.12, alpha: 1)).cgColor)
+                ctx.fill(rect.insetBy(dx: -size.width, dy: -size.height))
+                ctx.setStrokeColor((silver ? NSColor(white: 0.5, alpha: 1) : NSColor(white: 0.3, alpha: 1)).cgColor)
+                ctx.setLineWidth(max(1, geo.unit * 0.015))
+                let vertical = size.width >= size.height
+                let step = (vertical ? size.height : size.width) / 6
+                for i in -12...12 {
+                    let d = CGFloat(i) * step
+                    if vertical {
+                        ctx.move(to: CGPoint(x: rect.minX, y: rect.midY + d))
+                        ctx.addLine(to: CGPoint(x: rect.maxX, y: rect.midY + d))
+                    } else {
+                        ctx.move(to: CGPoint(x: rect.midX + d, y: rect.minY))
+                        ctx.addLine(to: CGPoint(x: rect.midX + d, y: rect.maxY))
+                    }
+                }
+                ctx.strokePath()
+            }
+            return
+        }
         let silver = (spec.style ?? "black") == "silver"
         let pressed = engine.virtualEncoders.contains(j) || engine.physicalEncoders.contains(j)
         let r = e.radius * (pressed ? 0.94 : 1)

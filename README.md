@@ -57,17 +57,12 @@ An on-screen keyboard for macOS that looks exactly like a real keyboard. Klikr s
 | `nut65` | Weikav Nut65 |
 | `rainy75` | Wobkey Rainy 75 (Lavender, Lavender RGB, Silver) |
 | `15-teal60` | 60% ISO, teal and grey |
-| `16-lime65` | 65% with lime artisan keycaps and a knob |
-| `17-white-96` | 96% white with orange arrows, German Mac layout |
-| `18-black65` | 65% black with tulip keys |
 | `19-packard-bell` | Packard Bell 101, retro full-size |
 | `20-hhkb-cream` | 60% HHKB with cream kana keycaps |
 | `21-zhuyin` | 60% with Zhuyin keycaps |
-| `22-lilac40` | 40% in a white and lilac case |
 | `23-iso75-red` | 75% ISO German, red and white, with a knob |
 | `24-hiragana` | 60% with red hiragana legends |
 | `25-cherry60` | Cherry 60% HHKB, grey |
-| `26-kanji40` | 40% cream with kanji modifiers |
 
 ## Settings
 

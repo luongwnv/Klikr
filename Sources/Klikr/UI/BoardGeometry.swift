@@ -9,6 +9,8 @@ struct BoardGeometry {
         var group: String
         /// Extra rectangle in key-local coordinates (ISO Enter and other stepped keys).
         var secondary: CGRect? = nil
+        /// Keycap insets measured for this key [left, top, right, bottom] in key units.
+        var cap: [Double]? = nil
 
         var transform: CGAffineTransform {
             CGAffineTransform(translationX: center.x, y: center.y).rotated(by: angle)
@@ -51,6 +53,12 @@ struct BoardGeometry {
         var center: CGPoint
         var radius: CGFloat
         var group: String
+        /// Set for rollers: the wheel's rectangle size.
+        var roller: CGSize? = nil
+
+        var rollerRect: CGRect? {
+            roller.map { CGRect(x: center.x - $0.width / 2, y: center.y - $0.height / 2, width: $0.width, height: $0.height) }
+        }
     }
 
     struct CoverShape {
@@ -103,14 +111,18 @@ struct BoardGeometry {
             keys.append(KeyShape(
                 center: CGPoint(x: (CGFloat(k.x) + w / 2 + shift(g)) * unit, y: (CGFloat(k.y) + h / 2) * unitH),
                 size: CGSize(width: w * unit, height: h * unitH),
-                angle: CGFloat(k.r ?? 0) * .pi / 180, group: g, secondary: secondary))
+                angle: CGFloat(k.r ?? 0) * .pi / 180, group: g, secondary: secondary, cap: k.cap))
         }
         for e in layout.encoders {
             let g = e.group ?? ""
             note(g)
+            var roller: CGSize?
+            if e.shape == "roller" {
+                roller = CGSize(width: CGFloat(e.w ?? e.d ?? 0.6) * unit, height: CGFloat(e.h ?? e.d ?? 0.3) * unitH)
+            }
             encoders.append(EncoderShape(
                 center: CGPoint(x: (CGFloat(e.x) + shift(g)) * unit, y: CGFloat(e.y) * unitH),
-                radius: CGFloat(e.d ?? 1) / 2 * unit, group: g))
+                radius: roller.map { max($0.width, $0.height) / 2 } ?? CGFloat(e.d ?? 1) / 2 * unit, group: g, roller: roller))
         }
         func rect(_ c: CoverSpec) -> CoverShape {
             let g = c.group ?? layout.keys.first?.group ?? ""
@@ -181,6 +193,13 @@ struct BoardGeometry {
     func encoderHit(at p: CGPoint) -> (Int, KeyboardEngine.EncoderPart)? {
         for (j, e) in encoders.enumerated() {
             let dx = p.x - e.center.x, dy = p.y - e.center.y
+            if let r = e.rollerRect, let size = e.roller {
+                guard r.insetBy(dx: -2, dy: -2).contains(p) else { continue }
+                // The wheel rolls across its short side: the far half turns it up, the near half down
+                let along = size.width >= size.height ? dy / size.height : dx / size.width
+                if abs(along) < 0.15 { return (j, .press) }
+                return (j, along < 0 ? .cw : .ccw)
+            }
             let dist = (dx * dx + dy * dy).squareRoot()
             guard dist <= e.radius else { continue }
             if dist < e.radius * 0.38 { return (j, .press) }
