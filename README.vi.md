@@ -59,6 +59,18 @@ Bàn phím ảo cho macOS, trông y hệt bàn phím thật. Klikr hiển thị 
 | `nut75` | Weikav Nut75 có con lăn (Orange, Silver) |
 | `nut65` | Weikav Nut65 |
 | `rainy75` | Wobkey Rainy 75 (Lavender, Lavender RGB, Silver) |
+| `15-teal60` | 60% ISO, xanh mòng két và xám |
+| `16-lime65` | 65% keycap artisan xanh chanh, có núm xoay |
+| `17-white-96` | 96% trắng, phím mũi tên cam, layout Mac tiếng Đức |
+| `18-black65` | 65% đen, phím hoa tulip |
+| `19-packard-bell` | Packard Bell 101, full-size cổ điển |
+| `20-hhkb-cream` | 60% HHKB keycap kana màu kem |
+| `21-zhuyin` | 60% keycap chú âm (Zhuyin) |
+| `22-lilac40` | 40% vỏ trắng và tím lilac |
+| `23-iso75-red` | 75% ISO tiếng Đức, đỏ trắng, có núm xoay |
+| `24-hiragana` | 60% chữ hiragana đỏ |
+| `25-cherry60` | Cherry 60% HHKB màu xám |
+| `26-kanji40` | 40% màu kem, phím chức năng chữ Hán |
 
 ## Cài đặt
 

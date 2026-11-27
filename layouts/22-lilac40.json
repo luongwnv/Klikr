@@ -1,0 +1,64 @@
+{
+  "name": "40% Lilac",
+  "spacing": {"x": 19.05, "y": 19.05},
+  "layers": [
+    {"name": "Base", "short": "abc"},
+    {"name": "Lower", "short": "low"},
+    {"name": "Raise", "short": "rse"}
+  ],
+  "groups": {
+    "board": {"key": "#1b1c1f", "keyTop": "#2a2b2f", "legend": "#e8e8e8", "case": "#eeece8", "plate": "#101012"}
+  },
+  "keys": [
+    {"id": "r0k0", "x": 0.0, "y": 0, "actions": ["esc", "`", "`"], "group": "board"},
+    {"id": "r0k1", "x": 1.0, "y": 0, "actions": ["q", "shift+1", "1"], "group": "board"},
+    {"id": "r0k2", "x": 2.0, "y": 0, "actions": ["w", "shift+2", "2"], "group": "board"},
+    {"id": "r0k3", "x": 3.0, "y": 0, "actions": ["e", "shift+3", "3"], "group": "board"},
+    {"id": "r0k4", "x": 4.0, "y": 0, "actions": ["r", "shift+4", "4"], "group": "board"},
+    {"id": "r0k5", "x": 5.0, "y": 0, "actions": ["t", "shift+5", "5"], "group": "board"},
+    {"id": "r0k6", "x": 6.0, "y": 0, "actions": ["y", "shift+6", "6"], "group": "board"},
+    {"id": "r0k7", "x": 7.0, "y": 0, "actions": ["u", "shift+7", "7"], "group": "board"},
+    {"id": "r0k8", "x": 8.0, "y": 0, "actions": ["i", "shift+8", "8"], "group": "board"},
+    {"id": "r0k9", "x": 9.0, "y": 0, "actions": ["o", "shift+9", "9"], "group": "board"},
+    {"id": "r0k10", "x": 10.0, "y": 0, "actions": ["p", "shift+0", "0"], "group": "board"},
+    {"id": "r1k11", "x": 0.0, "y": 1, "w": 1.25, "actions": ["tab", null, "capslock"], "group": "board"},
+    {"id": "r1k12", "x": 1.25, "y": 1, "actions": ["a", "-", "f1"], "group": "board"},
+    {"id": "r1k13", "x": 2.25, "y": 1, "actions": ["s", "=", "f2"], "group": "board"},
+    {"id": "r1k14", "x": 3.25, "y": 1, "actions": ["d", "[", "f3"], "group": "board"},
+    {"id": "r1k15", "x": 4.25, "y": 1, "actions": ["f", "]", "f4"], "homing": true, "group": "board"},
+    {"id": "r1k16", "x": 5.25, "y": 1, "actions": ["g", "\\", "f5"], "group": "board"},
+    {"id": "r1k17", "x": 6.25, "y": 1, "actions": ["h", ";", "left"], "group": "board"},
+    {"id": "r1k18", "x": 7.25, "y": 1, "actions": ["j", "shift+;", "down"], "homing": true, "group": "board"},
+    {"id": "r1k19", "x": 8.25, "y": 1, "actions": ["k", "/", "up"], "group": "board"},
+    {"id": "r1k20", "x": 9.25, "y": 1, "actions": ["l", "shift+/", "right"], "group": "board"},
+    {"id": "r1k21", "x": 10.25, "y": 1, "actions": ["'", "shift+'", "pgup"], "group": "board"},
+    {"id": "r2k22", "x": 0.0, "y": 2, "w": 1.75, "actions": ["lshift"], "group": "board"},
+    {"id": "r2k23", "x": 1.75, "y": 2, "actions": ["z", "shift+-", "f6"], "group": "board"},
+    {"id": "r2k24", "x": 2.75, "y": 2, "actions": ["x", "shift+=", "f7"], "group": "board"},
+    {"id": "r2k25", "x": 3.75, "y": 2, "actions": ["c", "shift+[", "f8"], "group": "board"},
+    {"id": "r2k26", "x": 4.75, "y": 2, "actions": ["v", "shift+]", "f9"], "group": "board"},
+    {"id": "r2k27", "x": 5.75, "y": 2, "actions": ["b", "shift+\\", "f10"], "group": "board"},
+    {"id": "r2k28", "x": 6.75, "y": 2, "actions": ["n", "shift+`", "f11"], "group": "board"},
+    {"id": "r2k29", "x": 7.75, "y": 2, "actions": ["m", "`", "f12"], "group": "board"},
+    {"id": "r2k30", "x": 8.75, "y": 2, "actions": [",", null, "home"], "group": "board"},
+    {"id": "r2k31", "x": 9.75, "y": 2, "actions": [".", null, "end"], "group": "board"},
+    {"id": "r2k32", "x": 10.75, "y": 2, "w": 1.5, "actions": ["rshift"], "group": "board"},
+    {"id": "r3k33", "x": 0.0, "y": 3, "actions": ["lctrl"], "group": "board"},
+    {"id": "r3k34", "x": 1.0, "y": 3, "actions": ["lcmd"], "group": "board"},
+    {"id": "r3k35", "x": 2.0, "y": 3, "actions": ["lopt"], "group": "board"},
+    {"id": "r3k36", "x": 3.0, "y": 3, "w": 3, "actions": ["space"], "group": "board"},
+    {"id": "rspace", "x": 6.0, "y": 3, "w": 3, "actions": ["space", "bspc", "del"], "group": "board"},
+    {"id": "r3k38", "x": 9.0, "y": 3, "w": 1.25, "actions": ["ropt"], "group": "board"},
+    {"id": "r3k39", "x": 10.25, "y": 3, "actions": ["mo(2)"], "group": "board"},
+    {"id": "r3k40", "x": 11.25, "y": 3, "actions": ["mo(1)"], "group": "board"},
+    {"id": "enter", "x": 11.25, "y": 0, "w": 1, "h": 2, "x2": -0.25, "y2": 0, "w2": 1.25, "h2": 1, "actions": ["enter", null, "pgdn"], "group": "board"}
+  ],
+  "cases": [
+    {"x": -0.6, "y": -0.6, "w": 13.45, "h": 5.2, "r": 0.3}
+  ],
+  "skins": [
+    {"group": "board", "image": "22-lilac40-skin/board.png", "x": -1.0, "y": -1.2, "w": 14.4, "h": 7.8}
+  ],
+  "skinLegends": true,
+  "cap": {"inset": [0.1, 0.1, 0.2, 0.15], "radius": 0.1}
+}

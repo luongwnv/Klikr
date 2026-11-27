@@ -994,6 +994,10 @@ def make_skin(lid, spec, keys, ppu=120):
         # Board module supplies fn(rgba array, keys of this group, x0, y0, ppu) -> bool foreground
         group_keys = [k for k in keys if k.get('group') == spec.get('group', k.get('group'))]
         fg = spec['mask'][1](np.asarray(warped), group_keys, x0, y0, ppu)
+        if isinstance(fg, tuple):
+            # The module also repainted the photo (for example over a hand covering the case)
+            fg, repainted = fg
+            warped = Image.fromarray(repainted.astype('uint8'), 'RGBA')
         alpha = Image.fromarray((fg * 255).astype('uint8')).filter(ImageFilter.GaussianBlur(1.0))
     elif kind == 'background':
         # Product shot on a plain white background: everything darker than it is the keyboard
